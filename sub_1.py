@@ -31,7 +31,7 @@ def zmq_client_req_snd_and_recv_from_zk( zmq_addr,value):
     time.sleep(1)
     print("Receiving req_sub_rep\n")
 
-    STstr="/SubTopic-"+value
+    STstr="/topic/"+value+"/sub"
     print(STstr)
 
     if zk.exists(STstr ):

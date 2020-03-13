@@ -301,21 +301,16 @@ def main():
     print("*************Running BROKER ...\n***********")
     zk.start()
 
-    #zk.delete("/election/currIx")
-
-
 
     #Do leader election and if winner then become active broker else stay as standby
     
     if  zk.exists("/election/currIx"):
         i,stat=zk.get("/election/currIx")
         i=int.from_bytes(i,byteorder='little')
-        i=i-48
-        print("node /election/currIx exists :",i)
+        print(i)
     else:
         i=0
-        bmsg=str.encode(str(i))
-        zk.create("/election/currIx",value=bmsg,makepath=True)
+        zk.create("/election/currIx",value=bytes(i),ephermeral=True,makepath=True)
         
     
     while(1):
@@ -324,13 +319,9 @@ def main():
         else:
             newElectionNode="/election/"+str(i)
             zk.create(newElectionNode,ephemeral=True,makepath=True)
-            bmsg=str.encode(str(i))
-            zk.set("/election/currIx",bmsg)
+            zk.set("/election/currIx",bytes(i))
 
             print(newElectionNode)
-
-            ix,stat = zk.get("/election/currIx")
-            print (ix)
 
             break
     

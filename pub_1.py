@@ -35,7 +35,7 @@ def zmq_client_req_snd_and_recv_from_zk( zmq_addr, value):
     print("Receiving req_pub_rep_from_zk\n")
     #value=socket.recv_string()
 
-    PTstr="/PubTopic-"+value
+    PTstr="/topic/"+value+"/pub"
     print(PTstr)
 
     if zk.exists (PTstr):

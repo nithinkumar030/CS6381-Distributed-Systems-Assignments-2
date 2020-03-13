@@ -301,51 +301,26 @@ def main():
     print("*************Running BROKER ...\n***********")
     zk.start()
 
-    #zk.delete("/election/currIx")
-
+    
 
 
     #Do leader election and if winner then become active broker else stay as standby
     
-    if  zk.exists("/election/currIx"):
-        i,stat=zk.get("/election/currIx")
-        i=int.from_bytes(i,byteorder='little')
-        i=i-48
-        print("node /election/currIx exists :",i)
-    else:
-        i=0
-        bmsg=str.encode(str(i))
-        zk.create("/election/currIx",value=bmsg,makepath=True)
+    zk.create("/ELECTION/guid-n_",ephermeral=True,sequence=True,makepath=True)
         
     
-    while(1):
-        if zk.exists("/election/"+str(i)):
-            i=i+1
-        else:
-            newElectionNode="/election/"+str(i)
-            zk.create(newElectionNode,ephemeral=True,makepath=True)
-            bmsg=str.encode(str(i))
-            zk.set("/election/currIx",bmsg)
+    time.sleep(1)
 
-            print(newElectionNode)
 
-            ix,stat = zk.get("/election/currIx")
-            print (ix)
+    
+    children = zk.get_children("/ELECTION")
+    children.sort
 
+    for child in children:
+        if child == str(i):
+            leader = True
             break
-    
-    
-    while (1):
-
-        time.sleep(1)
-        children = zk.get_children("/election")
-        children.sort
-
-        for child in children:
-            if child == str(i):
-                leader = True
-                break
-            else :
+        else :
                 # watch next higher numbered node
                 #zk.get("/election/"+str(i+1))
                 leader=False
