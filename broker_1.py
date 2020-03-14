@@ -37,6 +37,9 @@ def check_pub_topic_in_zk(topic):
                 return -1
         else:
             return -1
+    else :
+        return -1
+
 
 
 def check_sub_topic_in_zk(topic):
@@ -52,6 +55,8 @@ def check_sub_topic_in_zk(topic):
                 return -1
         else:
             return -1
+    else :
+        return -1
         
 
 
